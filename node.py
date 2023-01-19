@@ -12,6 +12,7 @@ class Node:
         self.max_listens = options.get("max_listens", 1024 ** 2)
         self.max_recv_size = options.get("max_recv_size", 1024 ** 2)
         self.logging_level = options.get("logging_level", 1)
+        self.debug_mode = options.get("debug_mode", False)
         self.outgoing_socket = None
         self.incoming_socket = None
 
@@ -41,16 +42,6 @@ class Node:
             print(f"Node {self.node_name} is disconnected.")
         return self
 
-    def send(self, message=None, receiver=None, **data):
-        if message is not None:
-            data["message"] = message
-            data["type"] = data.get("type", "IncomingMessage")
-        data["sender"] = self.port
-        data["receiver"] = self.port
-        data = json.dumps(data)
-        self.outgoing_socket.send(data.encode())
-        return self
-
     def __accept_connections(self):
         while True:
             conn, addr = self.incoming_socket.accept()
@@ -64,9 +55,15 @@ class Node:
             if self.logging_level >= 2:
                 print(f"Node {self.node_name} received data from {addr} : {data}.")
             data = json.loads(data)
-            self._handle_data(data)
+            if self.debug_mode:
+                print(data)
+            else:
+                self._handle_incoming_data(data)
 
-    def _handle_data(self, data):
+    def _handle_incoming_data(self, data):
+        raise NotImplementedError
+
+    def send(self, message, message_type, receiver=None, sender=None, data_hash=None):
         raise NotImplementedError
 
     @staticmethod

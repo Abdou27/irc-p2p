@@ -1,3 +1,4 @@
+from typing import Optional
 class Translations:
     _texts = {
         "": {
@@ -46,7 +47,7 @@ class Translations:
                                     (une réponse au message peut être envoyé).
                                     Une nouvelle commande /away réactive l’utilisateur.
 /help                               Affiche la liste des commandes disponibles.
-/invite "{nick}"                    Invite un utilisateur sur le canal o`u on se trouve
+/invite "{nick}"                    Invite un utilisateur sur le canal où on se trouve
 /join "{canal}" "{clé}"             Permet de rejoindre un canal (protégé éventuellement par une clé).
                                     Le canal est créé s’il n’existe pas.
 /list                               Affiche la liste des canaux sur IRC.
@@ -92,7 +93,7 @@ class Translations:
     def same_name_connection_refused(self, name: str, addr: tuple) -> str:
         if self.lang == "fr":
             return f"Un autre utilisateur {addr} a essayé de se connecter avec le nom \"{name}\", la connexion a " \
-               f"été refusée."
+                   f"été refusée."
         else:
             return f"Another user {addr} tried to connect with the name \"{name}\", the connection has been refused."
 
@@ -152,7 +153,7 @@ class Translations:
                 away_message = f" Your away message is : \"{message}\"."
             return f"You are now marked as {status}.{away_message}"
 
-    def invite_cmd_response(self, name: str, channel: str, key: str) -> str:
+    def invite_cmd_response(self, name: str, channel: str, key: Optional[str]) -> str:
         if self.lang == "fr":
             key_msg = f" Clé : \"{key}\"" if key else ""
             return f"\"{name}\" vous a invité au canal \"{channel}\".{key_msg}"
